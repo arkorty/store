@@ -1,6 +1,7 @@
 "use client";
 
 import Flmngr from "@flmngr/flmngr-react";
+import { Edit2 } from "lucide-react";
 import Image from "next/image";
 import type { ComponentPropsWithRef } from "react";
 import { useRef, useState } from "react";
@@ -34,6 +35,13 @@ function Spinner() {
 			<style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
 		</div>
 	);
+}
+
+// Helper to infer slug from URL
+function inferSlugFromUrl(): string | undefined {
+	if (typeof window === "undefined") return undefined;
+	const match = window.location.pathname.match(/\/product\/([^/?#]+)/);
+	return match ? match[1] : undefined;
 }
 
 type MainProductImageClientProps = Omit<ComponentPropsWithRef<typeof Image>, "width" | "height" | "sizes"> & {
@@ -104,8 +112,34 @@ const MainProductImageClient = ({ showEditButton, ...imgProps }: MainProductImag
 								onClose();
 								return;
 							}
-							// Just update the UI with the new image, do not upload
-							setImageSrc(imageUrl);
+							// Upload the image to the API route
+							const formData = new FormData();
+							let slug = (imgProps as any).slug;
+							if (!slug) {
+								slug = inferSlugFromUrl();
+							}
+							formData.append("slug", slug || "");
+							formData.append("image", imageBlob, "edited-image.jpg");
+
+							try {
+								const res = await fetch("/api/update-stripe-image", {
+									method: "POST",
+									body: formData,
+								});
+								// Type guard for API response
+								type StripeUpdateResponse = { product?: { images?: string[] } };
+								const data = (await res.json()) as StripeUpdateResponse;
+								if (res.ok && data.product && data.product.images && data.product.images[0]) {
+									setImageSrc(data.product.images[0]);
+								} else {
+									alert("Failed to update product image on Stripe.");
+									setImageSrc(imageUrl); // fallback to local preview
+								}
+							} catch (err) {
+								console.error(err);
+								alert("Error uploading image to Stripe.");
+								setImageSrc(imageUrl); // fallback to local preview
+							}
 							setLoading(false);
 							onClose();
 						} catch (err) {
@@ -155,7 +189,7 @@ const MainProductImageClient = ({ showEditButton, ...imgProps }: MainProductImag
 							zIndex: 10,
 						}}
 					>
-						EDIT
+						<Edit2 size={18} />
 					</button>
 				)}
 			</div>
