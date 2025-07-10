@@ -89,7 +89,7 @@ export const slugify = (text: string) => {
 export const capitalize = (str: string) => (str[0] ? str[0].toUpperCase() + str.slice(1) : "");
 
 export const deslugify = (slug: string) => {
-	return slug
+	return decodeURIComponent(slug)
 		.split("-")
 		.map((part) => capitalize(part))
 		.join(" ");
