@@ -18,6 +18,7 @@ interface User {
 interface SessionData extends JWTPayload {
 	user: User;
 	expires: number;
+	token: string; // Add token to session data
 }
 
 export async function encrypt(payload: SessionData): Promise<string> {
@@ -53,9 +54,9 @@ export async function login(_state: unknown, formData: FormData): Promise<{ erro
 		return;
 	}
 
+	// Per Fake Store API docs, send username and password in the body only
 	const res = await fetch("https://fakestoreapi.com/auth/login", {
 		method: "POST",
-		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({ username, password }),
 	});
 
@@ -69,7 +70,12 @@ export async function login(_state: unknown, formData: FormData): Promise<{ erro
 	}
 
 	const expires = Date.now() + SessionDuration;
-	(await cookies()).set("session", data.token, {
+	const jwt = await encrypt({
+		user: { email: username },
+		expires,
+		token: data.token,
+	});
+	(await cookies()).set("session", jwt, {
 		expires: new Date(expires),
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",

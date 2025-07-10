@@ -1,6 +1,5 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { decrypt, updateSession } from "./lib/auth";
 
 const ProtectedPaths = ["/orders"];
 
@@ -17,12 +16,8 @@ export async function middleware(request: NextRequest) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}
 
-	const data = await decrypt(session);
-	if (!data || data.expires < Date.now()) {
-		return NextResponse.redirect(new URL("/login", request.url));
-	}
-
-	return updateSession(request);
+	// Do not validate/decrypt the session, just check presence
+	return NextResponse.next();
 }
 
 export const config = {
