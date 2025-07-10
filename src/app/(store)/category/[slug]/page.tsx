@@ -8,9 +8,10 @@ import { ProductList } from "@/ui/products/product-list";
 
 export const generateMetadata = async (props: { params: Promise<{ slug: string }> }): Promise<Metadata> => {
 	const params = await props.params;
+	const decodedSlug = decodeURIComponent(params.slug);
 	const products = await Commerce.productBrowse({
 		first: 100,
-		filter: { category: params.slug },
+		filter: { category: decodedSlug },
 	});
 
 	if (products.length === 0) {
@@ -20,16 +21,18 @@ export const generateMetadata = async (props: { params: Promise<{ slug: string }
 	const t = await getTranslations("/category.metadata");
 
 	return {
-		title: t("title", { categoryName: deslugify(params.slug) }),
+		title: t("title", { categoryName: deslugify(decodedSlug) }),
 		alternates: { canonical: `${publicUrl}/category/${params.slug}` },
 	};
 };
 
 export default async function CategoryPage(props: { params: Promise<{ slug: string }> }) {
 	const params = await props.params;
+	const decodedSlug = decodeURIComponent(params.slug);
+
 	const products = await Commerce.productBrowse({
 		first: 100,
-		filter: { category: params.slug },
+		filter: { category: decodedSlug },
 	});
 
 	if (products.length === 0) {
@@ -41,9 +44,9 @@ export default async function CategoryPage(props: { params: Promise<{ slug: stri
 	return (
 		<main className="pb-8">
 			<h1 className="text-3xl font-bold leading-none tracking-tight text-foreground">
-				{deslugify(params.slug)}
+				{deslugify(decodedSlug)}
 				<div className="text-lg font-semibold text-muted-foreground">
-					{t("title", { categoryName: deslugify(params.slug) })}
+					{t("title", { categoryName: deslugify(decodedSlug) })}
 				</div>
 			</h1>
 			<ProductList products={products} />

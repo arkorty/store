@@ -1,10 +1,10 @@
-import AccessoriesImage from "@/images/accessories.jpg";
-import ApparelImage from "@/images/apparel.jpg";
+import JewelleryImage from "@/images/accessories.jpg"; // Reuse accessories image for jewellery for now
+import MenImage from "@/images/apparel.jpg";
 
 export const config = {
 	categories: [
-		{ name: "Apparel", slug: "apparel", image: ApparelImage },
-		{ name: "Accessories", slug: "accessories", image: AccessoriesImage },
+		{ name: "Men", slug: "Men's Clothing", image: MenImage },
+		{ name: "Jewellery", slug: "jewelery", image: JewelleryImage },
 	],
 
 	social: {
