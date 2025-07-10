@@ -10,7 +10,7 @@ export const Nav = async () => {
 		<header className="z-50 py-4 sticky top-0 bg-white/90 backdrop-blur-xs nav-border-reveal">
 			<div className="mx-auto flex max-w-7xl items-center gap-2 px-4 flex-row sm:px-6 lg:px-8">
 				<YnsLink href="/">
-					<SeoH1 className="-mt-0.5 whitespace-nowrap text-xl font-bold">Your Next Store</SeoH1>
+					<SeoH1 className="-mt-0.5 whitespace-nowrap text-xl font-bold">WebArk</SeoH1>
 				</YnsLink>
 
 				<div className="max-w-full flex shrink w-auto sm:mr-auto overflow-auto max-sm:order-2">

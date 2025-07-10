@@ -15,15 +15,15 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 			<Card>
 				<CardHeader>
 					<CardTitle className="text-2xl">Login</CardTitle>
-					<CardDescription>Enter your email below to login to your account</CardDescription>
+					<CardDescription>Enter your username below to login to your account</CardDescription>
 				</CardHeader>{" "}
 				<CardContent>
 					<form action={action}>
 						<div className="grid gap-6">
 							<div className="grid gap-6">
 								<div className="grid gap-2">
-									<Label htmlFor="email">Email</Label>
-									<Input name="email" type="email" placeholder="m@example.com" required />
+									<Label htmlFor="username">Username</Label>
+									<Input name="username" type="text" placeholder="username" required />
 								</div>
 								<div className="grid gap-2">
 									<Label htmlFor="password">Password</Label>

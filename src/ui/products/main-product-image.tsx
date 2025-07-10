@@ -6,7 +6,9 @@ import type { ComponentPropsWithRef } from "react";
 const MainProductImageClient = dynamic(() => import("./main-product-image-client"), { ssr: false });
 
 export const MainProductImage = (
-	props: Omit<ComponentPropsWithRef<typeof Image>, "width" | "height" | "sizes">,
+	props: Omit<ComponentPropsWithRef<typeof Image>, "width" | "height" | "sizes"> & {
+		showEditButton?: boolean;
+	},
 ) => {
-	return <MainProductImageClient {...props} />;
+	return <MainProductImageClient {...props} showEditButton={props.showEditButton ?? false} />;
 };

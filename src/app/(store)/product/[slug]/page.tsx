@@ -150,6 +150,7 @@ export default async function SingleProductPage(props: {
 												loading="eager"
 												priority
 												alt=""
+												showEditButton={true}
 											/>
 										) : (
 											<Image

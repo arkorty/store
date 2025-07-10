@@ -34,7 +34,7 @@
 	"/.hero.title": "Discover our Curated Collection",
 	"/.hero.description": "Explore our carefully selected products for your home and lifestyle.",
 	"/.hero.action": "Shop Now",
-	"/.hero.link": "/category/accessories",
+	"/.hero.link": "/products",
 	"/search.notFound.title": "No Results Found for \"{query}\"",
 	"/search.notFound.description": "Sorry, we couldn't find any results that match your search query. Please try refining your search.",
 	"/search.metadata.title": "Search: {query} · Your Next Store",

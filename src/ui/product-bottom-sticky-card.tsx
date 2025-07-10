@@ -33,6 +33,7 @@ export const ProductBottomStickyCard = ({
 								loading="eager"
 								priority
 								alt=""
+								showEditButton={false}
 							/>
 						)}
 					</div>

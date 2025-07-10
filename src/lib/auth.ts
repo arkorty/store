@@ -44,17 +44,32 @@ export async function decrypt(input: string): Promise<SessionData | null | undef
 export async function login(_state: unknown, formData: FormData): Promise<{ error?: string } | undefined> {
 	"use server";
 
-	const email = formData.get("email") as string;
+	const username = formData.get("username") as string;
 	const password = formData.get("password") as string;
 
-	if (email !== process.env.EMAIL || password !== process.env.PASSWORD) {
+	// If session already exists, skip login
+	if ((await cookies()).get("session")?.value) {
+		redirect("/orders");
+		return;
+	}
+
+	const res = await fetch("https://fakestoreapi.com/auth/login", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ username, password }),
+	});
+
+	if (!res.ok) {
+		return { error: "Invalid credentials" };
+	}
+
+	const data = (await res.json()) as { token?: string };
+	if (!data.token) {
 		return { error: "Invalid credentials" };
 	}
 
 	const expires = Date.now() + SessionDuration;
-	const session = await encrypt({ user: { email }, expires });
-
-	(await cookies()).set("session", session, {
+	(await cookies()).set("session", data.token, {
 		expires: new Date(expires),
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",

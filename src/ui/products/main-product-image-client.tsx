@@ -36,7 +36,9 @@ function Spinner() {
 	);
 }
 
-type MainProductImageClientProps = Omit<ComponentPropsWithRef<typeof Image>, "width" | "height" | "sizes">;
+type MainProductImageClientProps = Omit<ComponentPropsWithRef<typeof Image>, "width" | "height" | "sizes"> & {
+	showEditButton?: boolean;
+};
 
 const getProxiedUrl = (src: string) => {
 	if (typeof src === "string" && src.startsWith("https://files.stripe.com/")) {
@@ -45,9 +47,9 @@ const getProxiedUrl = (src: string) => {
 	return src;
 };
 
-const MainProductImageClient = (props: MainProductImageClientProps) => {
+const MainProductImageClient = ({ showEditButton, ...imgProps }: MainProductImageClientProps) => {
 	const imageRef = useRef<HTMLDivElement>(null);
-	const [imageSrc, setImageSrc] = useState(props.src);
+	const [imageSrc, setImageSrc] = useState(imgProps.src);
 	const [loading, setLoading] = useState(false);
 
 	const FLMNGR_API_KEY = process.env.NEXT_PUBLIC_FLMNGR_API_KEY;
@@ -124,36 +126,38 @@ const MainProductImageClient = (props: MainProductImageClientProps) => {
 	return (
 		<>
 			{loading && <Spinner />}
-			<div ref={imageRef} className={props.className} style={{ position: "relative" }}>
+			<div ref={imageRef} className={imgProps.className} style={{ position: "relative" }}>
 				<Image
 					width={700}
 					height={700}
 					sizes="(max-width: 1024x) 100vw, (max-width: 1280px) 50vw, 700px"
-					{...props}
+					{...imgProps}
 					src={imageSrc}
-					className={props.className}
+					className={imgProps.className}
 				/>
-				<button
-					onClick={(e) => {
-						e.stopPropagation();
-						e.preventDefault();
-						handleEdit();
-					}}
-					style={{
-						position: "absolute",
-						top: 12,
-						right: 12,
-						background: "rgba(0,0,0,0.6)",
-						color: "#fff",
-						border: "none",
-						borderRadius: 4,
-						padding: "6px 12px",
-						cursor: "pointer",
-						zIndex: 10,
-					}}
-				>
-					EDIT
-				</button>
+				{showEditButton && (
+					<button
+						onClick={(e) => {
+							e.stopPropagation();
+							e.preventDefault();
+							handleEdit();
+						}}
+						style={{
+							position: "absolute",
+							top: 12,
+							right: 12,
+							background: "rgba(0,0,0,0.6)",
+							color: "#fff",
+							border: "none",
+							borderRadius: 4,
+							padding: "6px 12px",
+							cursor: "pointer",
+							zIndex: 10,
+						}}
+					>
+						EDIT
+					</button>
+				)}
 			</div>
 		</>
 	);
